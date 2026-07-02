@@ -92,11 +92,20 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh release download ${{ needs.release-please.outputs.tag_name }} --pattern checksums.txt --repo ${{ github.repository }} --dir /tmp
 
+      - name: Generate app token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+          owner: vibber-ai
+          repositories: homebrew-tap
+
       - name: Checkout tap repo
         uses: actions/checkout@v4
         with:
           repository: vibber-ai/homebrew-tap
-          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Update formula
         env:
@@ -171,7 +180,7 @@ jobs:
 
       - name: Create PR in tap repo
         env:
-          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           BRANCH="portmap-${{ needs.release-please.outputs.tag_name }}"
           git config user.name "github-actions[bot]"
