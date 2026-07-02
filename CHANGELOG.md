@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/vibber-ai/portmap/compare/portmap-v0.8.0...portmap-v0.8.1) (2026-07-02)
+
+
+### Bug Fixes
+
+* trigger release to test vibber-ai release pipeline ([273eedf](https://github.com/vibber-ai/portmap/commit/273eedf69c1aca150aed83280efc63ae0b9a9f58))
+
 ## [0.8.0](https://github.com/JonasKs/portmap/compare/portmap-v0.7.1...portmap-v0.8.0) (2026-04-16)
 
 
