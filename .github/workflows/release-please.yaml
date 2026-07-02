@@ -92,11 +92,20 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh release download ${{ needs.release-please.outputs.tag_name }} --pattern checksums.txt --repo ${{ github.repository }} --dir /tmp
 
+      - name: Generate app token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
+          owner: vibber-ai
+          repositories: homebrew-tap
+
       - name: Checkout tap repo
         uses: actions/checkout@v4
         with:
-          repository: jonasks/homebrew-tap
-          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          repository: vibber-ai/homebrew-tap
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Update formula
         env:
@@ -112,30 +121,30 @@ jobs:
           cat > Formula/portmap.rb << FORMULA
           class Portmap < Formula
             desc "Map names to localhost ports. Made for agents and humans."
-            homepage "https://github.com/jonasks/portmap"
+            homepage "https://github.com/vibber-ai/portmap"
             version "$VERSION"
             license "MIT"
 
             on_macos do
               on_arm do
-                url "https://github.com/jonasks/portmap/releases/download/$TAG/portmap-aarch64-apple-darwin.tar.gz"
+                url "https://github.com/vibber-ai/portmap/releases/download/$TAG/portmap-aarch64-apple-darwin.tar.gz"
                 sha256 "$SHA_AARCH64_DARWIN"
               end
 
               on_intel do
-                url "https://github.com/jonasks/portmap/releases/download/$TAG/portmap-x86_64-apple-darwin.tar.gz"
+                url "https://github.com/vibber-ai/portmap/releases/download/$TAG/portmap-x86_64-apple-darwin.tar.gz"
                 sha256 "$SHA_X86_64_DARWIN"
               end
             end
 
             on_linux do
               on_arm do
-                url "https://github.com/jonasks/portmap/releases/download/$TAG/portmap-aarch64-unknown-linux-gnu.tar.gz"
+                url "https://github.com/vibber-ai/portmap/releases/download/$TAG/portmap-aarch64-unknown-linux-gnu.tar.gz"
                 sha256 "$SHA_AARCH64_LINUX"
               end
 
               on_intel do
-                url "https://github.com/jonasks/portmap/releases/download/$TAG/portmap-x86_64-unknown-linux-gnu.tar.gz"
+                url "https://github.com/vibber-ai/portmap/releases/download/$TAG/portmap-x86_64-unknown-linux-gnu.tar.gz"
                 sha256 "$SHA_X86_64_LINUX"
               end
             end
@@ -171,7 +180,7 @@ jobs:
 
       - name: Create PR in tap repo
         env:
-          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           BRANCH="portmap-${{ needs.release-please.outputs.tag_name }}"
           git config user.name "github-actions[bot]"
@@ -180,7 +189,7 @@ jobs:
           git add Formula/portmap.rb
           git commit -m "feat: update portmap to ${{ needs.release-please.outputs.tag_name }}"
           git push origin "$BRANCH"
-          gh pr create --repo jonasks/homebrew-tap \
+          gh pr create --repo vibber-ai/homebrew-tap \
             --title "Update portmap to ${{ needs.release-please.outputs.tag_name }}" \
-            --body "Automated formula update from [portmap release](https://github.com/jonasks/portmap/releases/tag/${{ needs.release-please.outputs.tag_name }})." \
+            --body "Automated formula update from [portmap release](https://github.com/vibber-ai/portmap/releases/tag/${{ needs.release-please.outputs.tag_name }})." \
             --head "$BRANCH"

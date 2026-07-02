@@ -19,7 +19,7 @@ Agents can use the CLI, or `curl -H "Accept: text/markdown" http://localhost:133
 
 ```bash
 brew update 
-brew install jonasks/tap/portmap
+brew install vibber-ai/tap/portmap
 brew services start portmap         # start now + auto-start on login
 # or: portmap serve                 # one-time foreground run
 ```
@@ -112,7 +112,7 @@ This repo is a [Claude Code plugin marketplace](https://docs.anthropic.com/en/do
 ### Install as plugins
 
 ```
-/plugin marketplace add JonasKs/portmap
+/plugin marketplace add vibber-ai/portmap
 /plugin install portmap@portmap
 /plugin install port-allocation@portmap
 ```
