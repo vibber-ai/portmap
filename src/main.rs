@@ -416,9 +416,9 @@ fn cmd_install(cfg: &Config, port: u16) {
     if is_homebrew_install() {
         println!("portmap was installed via Homebrew.");
         println!("Use brew to manage the service:\n");
-        println!("  brew services start jonasks/tap/portmap");
-        println!("  brew services stop jonasks/tap/portmap");
-        println!("  brew services info jonasks/tap/portmap");
+        println!("  brew services start vibber-ai/tap/portmap");
+        println!("  brew services stop vibber-ai/tap/portmap");
+        println!("  brew services info vibber-ai/tap/portmap");
         return;
     }
 
@@ -527,8 +527,8 @@ fn cmd_uninstall(db_path: &str) {
     if is_homebrew_install() {
         println!("portmap was installed via Homebrew.");
         println!("Use brew to uninstall:\n");
-        println!("  brew services stop jonasks/tap/portmap");
-        println!("  brew uninstall jonasks/tap/portmap");
+        println!("  brew services stop vibber-ai/tap/portmap");
+        println!("  brew uninstall vibber-ai/tap/portmap");
         return;
     }
 
